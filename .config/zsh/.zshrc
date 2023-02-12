@@ -71,13 +71,13 @@ ZSH_CUSTOM="$ZDOTDIR/oh-my-zsh/custom"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-	git
-	docker
-	docker-compose
-	zsh-syntax-highlighting
+    git
+    docker
+    docker-compose
+    zsh-syntax-highlighting
     zsh-history-substring-search
     zsh-autosuggestions
-	vi-mode
+    vi-mode
     autoswitch_virtualenv
     zsh-nvm
 )
@@ -110,8 +110,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias sudo='sudo '
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+source "$ZDOTDIR/.aliases"
 
 # Setup shell environment for pyenv
 export PYENV_ROOT="$HOME/.pyenv"

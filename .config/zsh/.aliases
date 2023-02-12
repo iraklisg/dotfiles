@@ -1,0 +1,17 @@
+# General aliases
+alias vim='nvim'
+alias sudo='sudo '
+
+# Manage dotfiles
+alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+
+# Docker aliases
+alias dils='docker image ls | (sed -u 1q; sort -k 1)'
+alias dcls='docker container ls --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}\t{{.State}}" | (sed -u 1q; sort -k2)'
+
+# Culture development
+alias develop='[ -f develop ] && ./develop'
+alias devel='develop'
+
+# Hylo development
+alias hylo='[ -f ./docker/bin/hylo.sh ] && ./docker/bin/hylo.sh'
