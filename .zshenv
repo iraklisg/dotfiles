@@ -6,7 +6,7 @@ export XDG_DATA_HOME="$HOME/.local/share"
 
 # ZSH
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
-export HISTFILE="$ZDOTDIR/.zhistory"
+export HISTFILE="$ZDOTDIR/.zsh_history"
 
 # zsh-nvm plugin
 export NVM_AUTO_USE=true
