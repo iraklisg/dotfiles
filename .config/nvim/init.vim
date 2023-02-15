@@ -4,4 +4,4 @@ set shiftwidth=4
 syntax on
 set clipboard=unnamedplus
 set mouse=v
-colorscheme shine
+colorscheme default
