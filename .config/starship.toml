@@ -1,5 +1,5 @@
-#[nodejs]
-#disabled=true
+[nodejs]
+symbol = " "
 
 [php]
 disabled=true
@@ -7,3 +7,9 @@ disabled=true
 [character]
 success_symbol = "[➜](bold green) "
 error_symbol = "[✗](bold red) "
+
+[python]
+symbol = " "
+
+[package]
+symbol = " "
