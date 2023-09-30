@@ -15,3 +15,47 @@ alias devel='develop'
 
 # Hylo development
 alias hylo='[ -f ./docker/bin/hylo.sh ] && ./docker/bin/hylo.sh'
+alias git_log_remote_draussenstadt_berlin="ssh draussenstadt_berlin-production 'su - draussenstadt_berlin -c \"cd project/draussenstadt_berlin/ && git log -10\"'"
+
+project_log() {
+  RED='\033[0;31m'
+  GREEN='\033[0;32m'
+  BOLD='\033[1m'
+  NC='\033[0m' # No Color
+  PS3="Select project: "
+  projects=("draussenstadt_berlin", "kulturraeume")
+  select project in "${projects[@]}"; do
+    if [[ " ${projects[@]} " =~ " ${project} " ]]; then
+      echo -e "${GREEN}You selected project: ${BOLD}${project}${NC}\n"
+      PS3="Select environment: "
+      environments=("production" "staging")
+      select environment in "${environments[@]}"; do
+        if [[ " ${environments[@]} " =~ " ${environment} " ]]; then
+          echo -e "${GREEN}You selected environment: ${BOLD}${environment}${NC}\n"
+          ssh "${project}-${environment}" "su - ${project} -c \"cd project/${project}/ && git log -1\""
+          break 2
+        else
+          echo -e "${RED}Invalid instance. Please select either 1 for production or 2 for staging.${NC}"
+        fi
+      done
+    else
+      echo -e "${RED}Invalid project. Please select a valid project from the list.${NC}"
+    fi
+  done
+}
+
+git-log-remote() {
+  local target=$1
+  local count=10 # Default count value
+  shift
+  for arg in "$@"; do
+    case $arg in
+    --count=*)
+      count="${arg#*=}"
+      shift
+      ;;
+    *) ;;
+    esac
+  done
+  ssh "${target}-production" "su - ${target} -c \"cd ./project/${target} && git log --max-count=${count}\""
+}
