@@ -13,3 +13,7 @@ export NVM_AUTO_USE=true
 
 export EDITOR="nvim"
 export VISUAL="nvim"
+
+# Workaround for zsh-autoswitch-virtualenv plugin
+# see: https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv/issues/111
+export AUTOSWITCH_FILE=".autoswitch_venv"
