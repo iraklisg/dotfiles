@@ -15,47 +15,62 @@ alias devel='develop'
 
 # Hylo development
 alias hylo='[ -f ./docker/bin/hylo.sh ] && ./docker/bin/hylo.sh'
-alias git_log_remote_draussenstadt_berlin="ssh draussenstadt_berlin-production 'su - draussenstadt_berlin -c \"cd project/draussenstadt_berlin/ && git log -10\"'"
 
-project_log() {
+
+fetch_latest_server_commit() {
   RED='\033[0;31m'
   GREEN='\033[0;32m'
-  BOLD='\033[1m'
-  NC='\033[0m' # No Color
-  PS3="Select project: "
-  projects=("draussenstadt_berlin", "kulturraeume")
-  select project in "${projects[@]}"; do
-    if [[ " ${projects[@]} " =~ " ${project} " ]]; then
-      echo -e "${GREEN}You selected project: ${BOLD}${project}${NC}\n"
-      PS3="Select environment: "
-      environments=("production" "staging")
-      select environment in "${environments[@]}"; do
-        if [[ " ${environments[@]} " =~ " ${environment} " ]]; then
-          echo -e "${GREEN}You selected environment: ${BOLD}${environment}${NC}\n"
-          ssh "${project}-${environment}" "su - ${project} -c \"cd project/${project}/ && git log -1\""
-          break 2
-        else
-          echo -e "${RED}Invalid instance. Please select either 1 for production or 2 for staging.${NC}"
-        fi
-      done
+  NC='\033[0m'
+  
+  local server_name="$1"
+
+  # Parse server name
+  # 
+  # Remove the "hylo-" prefix and split the rest by '-'
+  # and populate project, datahub, and environment
+  #
+  set_project_details() {
+    parts=("${(@s/-/)server_name#hylo-}")
+
+    if [[ ${#parts[@]} -eq 3 ]]; then
+      project="${parts[1]}"
+      datahub=true
+      environment="${parts[3]}"
+    elif [[ ${#parts[@]} -eq 2 ]]; then
+      project="${parts[1]}"
+      datahub=false
+      environment="${parts[2]}"
     else
-      echo -e "${RED}Invalid project. Please select a valid project from the list.${NC}"
+      echo -e "${RED}Invalid server name format${NC}"
+      return 1
     fi
-  done
+  }
+
+  # Set remote project user and project dir
+  #
+  set_remote_details() {
+    if [[ "$datahub" == false ]]; then
+      remote_user="$project"
+      remote_project_dir="$project"
+    else
+      remote_user="data_hub"
+      remote_project_dir="data_hub"
+    fi
+  }
+  
+  local project
+  local datahub
+  local environment
+
+  set_project_details
+  
+  local remote_user
+  local remote_project_dir
+
+  set_remote_details
+
+  echo "${GREEN}Connect to ${BOLD}$server_name as $remote_user${NC}"
+
+  ssh "${server_name}" "su - ${remote_user} -c \"cd project/${remote_project_dir}/ && git log -1\""
 }
 
-git-log-remote() {
-  local target=$1
-  local count=10 # Default count value
-  shift
-  for arg in "$@"; do
-    case $arg in
-    --count=*)
-      count="${arg#*=}"
-      shift
-      ;;
-    *) ;;
-    esac
-  done
-  ssh "${target}-production" "su - ${target} -c \"cd ./project/${target} && git log --max-count=${count}\""
-}
