@@ -12,6 +12,7 @@ alias dkcls='docker container ls --format "table {{.ID}}\t{{.Names}}\t{{.Image}}
 # Culture development
 alias develop='[ -f develop ] && ./develop'
 alias devel='develop'
+alias 3pcompass='javaws /opt/3p-compass/compass.jnlp'
 
 # Hylo development
 alias hylo='[ -f ./docker/bin/hylo.sh ] && ./docker/bin/hylo.sh'
