@@ -112,6 +112,11 @@ source $ZSH/oh-my-zsh.sh
 
 source "$ZDOTDIR/.aliases"
 
+# Load secrets
+if [[ -f $XDG_CONFIG_HOME/zsh/.zsh_secrets ]]; then
+  source $XDG_CONFIG_HOME/zsh/.zsh_secrets
+fi
+
 # Setup shell environment for pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
