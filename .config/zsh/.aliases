@@ -1,3 +1,7 @@
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
 # General aliases
 alias vim='nvim'
 alias sudo='sudo '
@@ -17,12 +21,30 @@ alias 3pcompass='javaws /opt/3p-compass/compass.jnlp'
 # Hylo development
 alias hylo='[ -f ./docker/bin/hylo.sh ] && ./docker/bin/hylo.sh'
 
+browserstack_local() {
+  if [[ -z "$BROWSERSTACK_ACCESS_KEY" ]]; then
+	echo "${RED}BROWSERSTACK_ACCESS_KEY is not set.${NC}"
+	return 1
+  fi
+
+  /opt/browserstack/BrowserStackLocal --key "$BROWSERSTACK_ACCESS_KEY"
+}
+
+
+tmuxinit() {
+  local file=$(find . -type f -name "tmuxinit.sh" -print -quit)
+
+  if [[ -n $file ]]; then
+    echo "${GREEN}Executing $file${NC}"
+    # Execute the file
+    source "$file"
+  else
+    echo "${RED}tmuxinit.sh not found in the current directory or its subdirectories.${NC}"
+  fi
+}
+
 
 fetch_latest_server_commit() {
-  RED='\033[0;31m'
-  GREEN='\033[0;32m'
-  NC='\033[0m'
-  
   local server_name="$1"
 
   # Parse server name
