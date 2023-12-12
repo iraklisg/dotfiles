@@ -19,7 +19,7 @@ alias devel='develop'
 alias 3pcompass='javaws /opt/3p-compass/compass.jnlp'
 
 # Hylo development
-alias hylo='[ -f ./docker/bin/hylo.sh ] && ./docker/bin/hylo.sh'
+alias hylo='[ -f ~/.local/bin/hylo.sh ] && ~/.local/bin/hylo.sh'
 
 browserstack_local() {
   if [[ -z "$BROWSERSTACK_ACCESS_KEY" ]]; then
