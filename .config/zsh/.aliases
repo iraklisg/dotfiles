@@ -30,7 +30,6 @@ browserstack_local() {
   /opt/browserstack/BrowserStackLocal --key "$BROWSERSTACK_ACCESS_KEY"
 }
 
-
 tmuxinit() {
   local file=$(find . -type f -name "tmuxinit.sh" -print -quit)
 
@@ -41,59 +40,5 @@ tmuxinit() {
   else
     echo "${RED}tmuxinit.sh not found in the current directory or its subdirectories.${NC}"
   fi
-}
-
-
-fetch_latest_server_commit() {
-  local server_name="$1"
-
-  # Parse server name
-  # 
-  # Remove the "hylo-" prefix and split the rest by '-'
-  # and populate project, datahub, and environment
-  #
-  set_project_details() {
-    parts=("${(@s/-/)server_name#hylo-}")
-
-    if [[ ${#parts[@]} -eq 3 ]]; then
-      project="${parts[1]}"
-      datahub=true
-      environment="${parts[3]}"
-    elif [[ ${#parts[@]} -eq 2 ]]; then
-      project="${parts[1]}"
-      datahub=false
-      environment="${parts[2]}"
-    else
-      echo -e "${RED}Invalid server name format${NC}"
-      return 1
-    fi
-  }
-
-  # Set remote project user and project dir
-  #
-  set_remote_details() {
-    if [[ "$datahub" == false ]]; then
-      remote_user="$project"
-      remote_project_dir="$project"
-    else
-      remote_user="data_hub"
-      remote_project_dir="data_hub"
-    fi
-  }
-  
-  local project
-  local datahub
-  local environment
-
-  set_project_details
-  
-  local remote_user
-  local remote_project_dir
-
-  set_remote_details
-
-  echo "${GREEN}Connect to ${BOLD}$server_name as $remote_user${NC}"
-
-  ssh "${server_name}" "su - ${remote_user} -c \"cd project/${remote_project_dir}/ && git log -1\""
 }
 
