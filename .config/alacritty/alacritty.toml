@@ -1,0 +1,72 @@
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[colors.bright]
+black = "0x6a737d"
+blue = "0x00008b"
+cyan = "0x008b8b"
+green = "0x006400"
+magenta = "0x9400d3"
+red = "0x960000"
+white = "0xfafafa"
+yellow = "0x8b4513"
+
+[colors.cursor]
+cursor = "0x24292f"
+text = "0xfafafa"
+
+[colors.normal]
+black = "0x24292f"
+blue = "0x00008b"
+cyan = "0x008b8b"
+green = "0x006400"
+magenta = "0x9400d3"
+red = "0x960000"
+white = "0xfafafa"
+yellow = "0x8b4513"
+
+[colors.primary]
+background = "0xfafafa"
+foreground = "0x24292f"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 14.0
+
+[font.bold]
+family = "MesloLGS NF"
+style = "Bold"
+
+[font.bold_italic]
+family = "Source Code Pro"
+style = "Bold Italic"
+
+[font.italic]
+family = "Source Code Pro"
+style = "Italic"
+
+[font.normal]
+family = "MesloLGS NF"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = 1
+
+[scrolling]
+history = 5000
+
+[window]
+dynamic_padding = false
+opacity = 1
+title = "Alacritty"
+
+[window.class]
+general = "Alacritty"
+instance = "Alacritty"
+
+[window.padding]
+x = 6
+y = 6
