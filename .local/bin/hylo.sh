@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 
-DATABASE_USER=iraklis
+DATABASE_USER=${PGUSER:-iraklis}
 DATABASE_PASSWORD=${PGPASSWORD:-secret}
-DATABASE_HOST=postgis
-DATABASE_PORT=5432
-DOCKER_DATABASE_NETWORK=postgis-network
+DATABASE_HOST=${PGHOST:-postgis}
+DATABASE_PORT=${PGPORT:-5432}
+DATABASE_DOCKER_NETWORK=postgis-network
 
 _bold="$(tput bold)"
 _color_green="\033[0;32m"
@@ -17,12 +17,17 @@ function display_help() {
     echo "${_bold}Helper script for hylo development${_nc}"
     echo
     echo "${_color_yellow}Usage:${_nc}"
-    echo "  ./hylo.sh <command> [options] [arguments]"
+    echo "  hylo <command> [options] [arguments]"
     echo
-    echo "${_color_yellow}Commands:${_nc}"
-    echo "  ${_color_green}db:start${_nc}    Start docker postgis container"
-    echo "  ${_color_green}db:create DATABASE${_nc}   Create a new database"
-    echo "  ${_color_green}psql COMMAND${_nc}    Run psql"
+    echo "${_color_yellow}Database Commands:${_nc}"
+    echo "  ${_color_green}hylo db:start${_nc}              Start docker postgis container"
+    echo "  ${_color_green}hylo db:create DATABASE${_nc}    Create a new database"
+    echo "  ${_color_green}hylo db:psql COMMAND${_nc}       Run psql command"
+    echo
+    echo "${_color_yellow}Server Commands:${_nc}"
+    echo "  ${_color_green}hylo server:commit-check SERVER_NAME${_nc}   Check latest commit on remote server"
+    echo "  ${_color_green}hylo server:branch-check SERVER_NAME${_nc}   Check current branch on remote server"
+    echo
     exit 1
 }
 
@@ -92,7 +97,7 @@ if [ "$#" -gt 0 ]; then
         docker run -d \
             --restart always \
             --name ${DATABASE_HOST} \
-            --network ${DOCKER_DATABASE_NETWORK} \
+            --network ${DATABASE_DOCKER_NETWORK} \
             -e POSTGRES_PASSWORD=${DATABASE_PASSWORD} \
             -e POSTGRES_USER=${DATABASE_USER} \
             -p 127.0.0.1:${DATABASE_PORT}:5432 \
@@ -103,24 +108,24 @@ if [ "$#" -gt 0 ]; then
     elif [ "$1" = "db:create" ]; then
         shift 1
         docker run -it --rm \
-            --network ${DOCKER_DATABASE_NETWORK} \
+            --network ${DATABASE_DOCKER_NETWORK} \
             -e PGPASSWORD=${DATABASE_PASSWORD} \
             postgis/postgis:16-3.4 createdb -h ${DATABASE_HOST} -U ${DATABASE_USER} "$@"
 
     # Proxy psql commands
-    elif [ "$1" = "psql" ]; then
+    elif [ "$1" = "db:psql" ]; then
         shift 1
         docker run -it --rm \
-            --network ${DOCKER_DATABASE_NETWORK} \
+            --network ${DATABASE_DOCKER_NETWORK} \
             -e PGPASSWORD=${DATABASE_PASSWORD} \
             postgis/postgis:16-3.4 psql -h ${DATABASE_HOST} -U ${DATABASE_USER} "$@"
 
-    elif [ "$1" = "checkcommit" ]; then
+    elif [ "$1" = "server:commit-check" ]; then
         shift 1
         local server_name="$@"
         run_git_command_via_ssh "$server_name" "log -1"
 
-    elif [ "$1" = "checkbranch" ]; then
+    elif [ "$1" = "server:branch-check" ]; then
         shift 1
         local server_name="$@"
         run_git_command_via_ssh "$server_name" "rev-parse --abbrev-ref HEAD"
