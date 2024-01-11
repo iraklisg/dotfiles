@@ -5,6 +5,7 @@ DATABASE_PASSWORD=${PGPASSWORD:-secret}
 DATABASE_HOST=${PGHOST:-postgis}
 DATABASE_PORT=${PGPORT:-5432}
 DATABASE_DOCKER_NETWORK=postgis-network
+BROWSERSTACK_KEY=${BROWSERSTACK_ACCESS_KEY}
 
 _bold="$(tput bold)"
 _color_green="\033[0;32m"
@@ -27,6 +28,9 @@ function display_help() {
     echo "${_color_yellow}Server Commands:${_nc}"
     echo "  ${_color_green}hylo server:commit-check SERVER_NAME${_nc}   Check latest commit on remote server"
     echo "  ${_color_green}hylo server:branch-check SERVER_NAME${_nc}   Check current branch on remote server"
+    echo
+    echo "${_color_yellow}Browserstack Commands:${_nc}"
+    echo "  ${_color_green}hylo bs:start SERVER_NAME${_nc}   Start broserstack local"
     echo
     exit 1
 }
@@ -129,6 +133,13 @@ if [ "$#" -gt 0 ]; then
         shift 1
         local server_name="$@"
         run_git_command_via_ssh "$server_name" "rev-parse --abbrev-ref HEAD"
+
+    elif [ "$1" = "bs:start" ]; then
+        if [[ -z "$BROWSERSTACK_ACCESS_KEY" ]]; then
+            echo "${RED}BROWSERSTACK_ACCESS_KEY is not set.${NC}"
+            exit 1
+        fi
+        /opt/browserstack/BrowserStackLocal --key "$BROWSERSTACK_ACCESS_KEY"
 
     else
         echo "Invalid argument: $@"
