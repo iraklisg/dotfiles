@@ -25,6 +25,9 @@ function display_help() {
     echo "  ${_color_green}hylo db:create DATABASE${_nc}    Create a new database"
     echo "  ${_color_green}hylo db:psql COMMAND${_nc}       Run psql command"
     echo
+    echo "${_color_yellow}Proxy Commands:${_nc}"
+    echo "  ${_color_green}hylo proxy:start${_nc}   Start docker reverse proxy"
+    echo
     echo "${_color_yellow}Server Commands:${_nc}"
     echo "  ${_color_green}hylo server:commit-check SERVER_NAME${_nc}   Check latest commit on remote server"
     echo "  ${_color_green}hylo server:branch-check SERVER_NAME${_nc}   Check current branch on remote server"
@@ -129,6 +132,16 @@ if [ "$#" -gt 0 ]; then
             --network ${DATABASE_DOCKER_NETWORK} \
             -e PGPASSWORD=${DATABASE_PASSWORD} \
             postgis/postgis:16-3.4 psql -h ${DATABASE_HOST} -U ${DATABASE_USER} "$@"
+
+    # Start reverse proxy
+    elif [ "$1" = "proxy:start" ]; then
+        shift 1
+        docker run -d \
+            --restart always \
+            --name hylo-proxy \
+            --network "host" \
+            -v ${XDG_CONFIG_HOME}/nginx/conf.d/hylo-docker.conf:/etc/nginx/conf.d/default.conf \
+            nginx:1.19
 
     elif [ "$1" = "server:commit-check" ]; then
         shift 1
