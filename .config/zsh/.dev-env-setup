@@ -1,0 +1,4 @@
+# Env variables used for seting up the dockerized postgis server and running helper scripts
+export HYLO_DOCKER_POSTGRES_HOST=hylo-postgis
+export HYLO_DOCKER_POSTGRES_PORT=5432
+export HYLO_DOCKER_POSTGRES_NETWORK=hylo-postgis-network

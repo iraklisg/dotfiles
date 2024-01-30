@@ -117,6 +117,11 @@ if [[ -f $XDG_CONFIG_HOME/zsh/.zsh_secrets ]]; then
   source $XDG_CONFIG_HOME/zsh/.zsh_secrets
 fi
 
+# Load env varaibles used for seting up the dev env
+if [[ -f $XDG_CONFIG_HOME/zsh/.dev-env-setup ]]; then
+  source $XDG_CONFIG_HOME/zsh/.dev-env-setup
+fi
+
 # Setup shell environment for pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
