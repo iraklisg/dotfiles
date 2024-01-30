@@ -2,3 +2,6 @@
 export HYLO_DOCKER_POSTGRES_HOST=hylo-postgis
 export HYLO_DOCKER_POSTGRES_PORT=5432
 export HYLO_DOCKER_POSTGRES_NETWORK=hylo-postgis-network
+
+export HYLO_DOCKER_MYSQL_HOST=hylo-mysql
+export HYLO_DOCKER_MYSQL_NETWORK=hylo-mysql-network
